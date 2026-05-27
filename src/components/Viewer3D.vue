@@ -23,6 +23,8 @@ export default defineComponent({
     let meshObj: THREE.Mesh | null = null;
     let edgeLines: THREE.LineSegments | null = null;
     let modelGroup: THREE.Group | null = null;
+    let buildIndex = 0;
+    let activeBuildIndex = 0;
 
     async function init() {
       // 初始化 OCCT，确保三维网格生成之前模块已加载。
@@ -201,9 +203,22 @@ export default defineComponent({
 
     async function build(params: any) {
       if (!params) return;
-      console.log('Viewer3D build params', params);
+      const buildId = ++buildIndex;
+      activeBuildIndex = buildId;
+      if (!scene) {
+        await init();
+        if (!scene) {
+          console.warn('Viewer3D build skipped because scene is not initialized');
+          return;
+        }
+      }
+      console.log('Viewer3D build params', params, 'buildId', buildId);
       try {
         const geom = await generateMeshFromParams(params);
+        if (activeBuildIndex !== buildId) {
+          console.log('Viewer3D build aborted because a newer build started', buildId);
+          return;
+        }
         console.log('Viewer3D mesh', geom.positions.length, geom.indices.length);
 
         // 根据 OCCT 返回的网格数组构建 Three.js 几何体。
@@ -224,7 +239,19 @@ export default defineComponent({
         geometry.computeBoundingSphere();
 
         // 删除旧模型，避免重复显示。
-        if (modelGroup) scene.remove(modelGroup);
+        if (modelGroup) {
+          scene.remove(modelGroup);
+          modelGroup.traverse((obj) => {
+            if (obj instanceof THREE.Mesh) {
+              obj.geometry.dispose();
+              if (Array.isArray(obj.material)) {
+                obj.material.forEach((m) => m.dispose());
+              } else {
+                obj.material.dispose();
+              }
+            }
+          });
+        }
 
         const mat = new THREE.MeshStandardMaterial({
           color: 0x7888c0,
@@ -232,7 +259,7 @@ export default defineComponent({
           roughness: 0.5,
           flatShading: false,
           side: THREE.DoubleSide,
-          envMapIntensity: 0.8,
+          envMapIntensity: 0.8
         });
         meshObj = new THREE.Mesh(geometry, mat);
         meshObj.castShadow = true;
@@ -240,7 +267,11 @@ export default defineComponent({
 
         edgeLines = new THREE.LineSegments(
           new THREE.EdgesGeometry(geometry, 15),
-          new THREE.LineBasicMaterial({ color: 0x333333, transparent: true, opacity: 0.35 })
+          new THREE.LineBasicMaterial({
+            color: 0x333333,
+            transparent: true,
+            opacity: 0.35
+          })
         );
 
         const dims = buildDimensionHelpers(params);

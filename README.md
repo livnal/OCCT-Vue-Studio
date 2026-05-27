@@ -1,12 +1,17 @@
 <!--
  * @Descripttion:
  * @version:
- * @FilePath: /project-demo/README.md
+ * @FilePath: /OCCT-Vue-Studio/README.md
 -->
 
 # OCCT Vue Studio
 
 一个基于 Web 的参数化建模演示项目。用户可以通过输入几何参数，实时生成带有法兰结构的圆柱管 **2D 工程截面图** 和 **3D 交互式模型**。
+
+## 🔗 在线访问
+
+- ngrok公网访问：https://macaroni-snuff-clergyman.ngrok-free.dev/
+
 
 ## 🚀 主要特性
 
@@ -51,6 +56,6 @@
 - **2D 绘图**：位于 [`src/components/Drawing2D.vue`]。纯 SVG 实现，根据参数动态计算比例尺和标注位置。
 
 ### 注意事项
-- **WASM 加载**：首次加载 `opencascade.wasm` 可能需要几秒钟，请确保网络通畅。
+- **WASM 加载**：首次加载 `opencascade.wasm` 可能需要几秒钟，请确保网络通畅，在线访问时首次加载时间长达十分钟左右。
 - **类型定义**：由于 OCCT 是通过 Emscripten 导出的 JS 接口，目前项目中使用了部分 `any` 类型。如需更严格的类型检查，可参考 `src/types/opencascade.d.ts` 进行扩展。
 
