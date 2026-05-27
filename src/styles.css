@@ -1,0 +1,22 @@
+html,body,#app{
+  height:100%;
+  margin:0;
+}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+.app{
+  display:flex;
+  height:100vh;
+}
+.left{
+  width:36%;
+  border-right:1px solid #e5e7eb;
+  padding:12px;
+  box-sizing:border-box;
+}
+.right{
+  flex:1;
+  padding:12px;
+  box-sizing:border-box;
+}

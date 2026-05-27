@@ -1,0 +1,72 @@
+# dependencies
+defaults for npm
+node_modules/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# production
+/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment
+.env
+.env.*
+
+# generated
+.vite
+
+# TypeScript
+*.tsbuildinfo
+
+# local IDE
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Vue
+*.local
+
+# temporary
+*.tmp
+*.temp
+*.log
+
+# macOS
+.AppleDouble
+.LSOverride
+
+# Windows image file caches
+ehthumbs.db
+Desktop.ini
+
+# Node runtime
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+
+# Optional npm cache directory
+.npm
+
+# Build output
+dist/
+
+# Editor directories and files
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Icon?
