@@ -28,6 +28,9 @@ export async function initOCCT() {
   initializing = true;
   initPromise = (async () => {
     try {
+      console.log('开始加载 OpenCascade WASM...');
+      const startTime = performance.now();
+      
       oc = await new OpenCascade({
         locateFile(path: string) {
           if (path.endsWith('.wasm')) {
@@ -36,6 +39,10 @@ export async function initOCCT() {
           return path;
         }
       });
+      
+      const loadTime = ((performance.now() - startTime) / 1000).toFixed(2);
+      console.log(`OpenCascade WASM 加载完成，耗时 ${loadTime}s`);
+      
       ; (window as any).OCCT = oc;
       initialized = true;
       console.log('OCCT initialized');
@@ -48,6 +55,25 @@ export async function initOCCT() {
   })();
   
   return initPromise;
+}
+
+/**
+ * 在后台预加载 OCCT 模块，不阻塞主线程。
+ * 适用于应用启动时提前加载，提升首次交互体验。
+ * 
+ * @returns 无返回值（异步函数）
+ */
+export function preloadOCCT() {
+  // 使用 requestIdleCallback 或 setTimeout 延迟加载，避免影响首屏渲染
+  if ('requestIdleCallback' in window) {
+    (window as any).requestIdleCallback(() => {
+      initOCCT().catch(console.error);
+    });
+  } else {
+    setTimeout(() => {
+      initOCCT().catch(console.error);
+    }, 1000);
+  }
 }
 
 function toFloat32(arr: number[]) { return new Float32Array(arr); }

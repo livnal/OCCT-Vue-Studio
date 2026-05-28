@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, reactive, toRefs, watch } from 'vue';
+import { defineComponent, reactive, toRefs, watch, ref } from 'vue';
 
 export default defineComponent({
   name: 'InputPanel',
@@ -14,7 +14,12 @@ export default defineComponent({
       flange: props.initial.flange ?? 100
     });
 
-    // 如果父组件传入的初始参数变化，保持输入状态同步更新。
+    // 加载状态标志，用于显示 WASM 模块加载进度。
+    const isLoading = ref(false);
+
+    /**
+     * 如果父组件传入的初始参数变化，保持输入状态同步更新。
+     */
     watch(
       () => props.initial,
       (v) => {
@@ -25,17 +30,26 @@ export default defineComponent({
       }
     );
 
-    // 用户点击生成模型时，将参数规范化为数字并发出事件。
+    /**
+     * 用户点击生成模型时，将参数规范化为数字并发出事件。
+     * 设置加载状态以改善用户体验。
+     */
     function generate() {
+      isLoading.value = true;
       emit('generate', {
         diameter: Number(state.diameter),
         height: Number(state.height),
         thickness: Number(state.thickness),
         flange: Number(state.flange)
       });
+      
+      // 延迟重置加载状态，给几何计算留出时间
+      setTimeout(() => {
+        isLoading.value = false;
+      }, 500);
     }
 
-    return { ...toRefs(state), generate };
+    return { ...toRefs(state), generate, isLoading };
   }
 });
 </script>
@@ -48,7 +62,9 @@ export default defineComponent({
       <label>高度 (mm): <input type="number" v-model="height" /></label>
       <label>壁厚 (mm): <input type="number" v-model="thickness" /></label>
       <label>法兰半径 (mm): <input type="number" v-model="flange" /></label>
-      <button @click="generate">生成模型</button>
+      <button @click="generate" :disabled="isLoading">
+        {{ isLoading ? '加载中...' : '生成模型' }}
+      </button>
     </div>
   </div>
 </template>

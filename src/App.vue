@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import InputPanel from './components/InputPanel.vue'
 import Drawing2D from './components/Drawing2D.vue'
 import Viewer3D from './components/Viewer3D.vue'
+import { preloadOCCT } from './services/occt'
 
 export default defineComponent({
   name: 'App',
@@ -13,6 +14,13 @@ export default defineComponent({
 
   // 当前传递给 2D/3D 视图的模型参数。
   const shapeData = ref(null as any)
+
+  /**
+   * 应用挂载时预加载 OCCT WASM 模块，提升首次交互体验。
+   */
+  onMounted(() => {
+    preloadOCCT();
+  });
 
   // 当用户点击生成模型时触发。
   // 更新 2D 图形和 3D 视图的参数数据。
