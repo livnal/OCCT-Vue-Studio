@@ -10,8 +10,7 @@
 
 ## 🔗 在线访问
 
-- ngrok公网访问：https://macaroni-snuff-clergyman.ngrok-free.dev/
-
+- **GitHub Pages**: [https://your-username.github.io/OCCT-Vue-Studio/](https://your-username.github.io/OCCT-Vue-Studio/)
 
 ## 🚀 主要特性
 
@@ -48,6 +47,39 @@
    # 产物位于 dist/ 目录
    ```
 
+4. **部署到 GitHub Pages**
+   ```bash
+   # 方式一：使用自动化工作流（推荐）
+   # 推送到 main/master 分支后自动触发部署
+   
+   # 方式二：手动部署
+   npm run deploy
+   git add dist/.nojekyll
+   git commit -m "Deploy to GitHub Pages"
+   git subtree push --prefix dist origin gh-pages
+   ```
+
+## 🌐 GitHub Pages 部署说明
+
+本项目已配置自动化部署流程：
+
+### 自动部署
+1. 确保你的代码已推送到 GitHub 仓库的 `main` 或 `master` 分支
+2. 在仓库设置中启用 GitHub Pages：
+   - 进入 **Settings** → **Pages**
+   - 在 **Source** 下选择 **GitHub Actions**
+3. 每次推送到主分支时会自动触发部署
+
+### 手动部署
+```bash
+npm run deploy
+```
+
+### 注意事项
+- 首次部署可能需要 1-2 分钟
+- 部署成功后，访问地址为：`https://your-username.github.io/OCCT-Vue-Studio/`
+- 如果遇到 404 错误，请检查仓库名称是否与 `vite.config.ts` 中的 base 路径一致
+
 ## 💡 开发指南
 
 ### 核心逻辑说明
@@ -56,6 +88,5 @@
 - **2D 绘图**：位于 [`src/components/Drawing2D.vue`]。纯 SVG 实现，根据参数动态计算比例尺和标注位置。
 
 ### 注意事项
-- **WASM 加载**：首次加载 `opencascade.wasm` 可能需要几秒钟，请确保网络通畅，在线访问时首次加载时间长达十分钟左右。
+- **WASM 加载**：首次加载 `opencascade.wasm` 可能需要几秒钟，请确保网络通畅。
 - **类型定义**：由于 OCCT 是通过 Emscripten 导出的 JS 接口，目前项目中使用了部分 `any` 类型。如需更严格的类型检查，可参考 `src/types/opencascade.d.ts` 进行扩展。
-
