@@ -8,29 +8,46 @@ import occtWasmUrl from 'opencascade.js/dist/opencascade.wasm.wasm?url';
 // 缓存 OCCT 实例与初始化状态，避免重复加载。
 let oc: any = null;
 let initialized = false;
+let initializing = false;
+let initPromise: Promise<void> | null = null;
 
 /**
  * 初始化 OpenCascade WASM 模块，仅执行一次。
  * locateFile 用于正确定位 runtime 所需的 .wasm 文件。
+ * 
+ * @returns 无返回值（异步函数）
  */
 export async function initOCCT() {
   if (initialized) return;
-  try {
-    oc = await new OpenCascade({
-      locateFile(path: string) {
-        if (path.endsWith('.wasm')) {
-          return occtWasmUrl;
-        }
-        return path;
-      }
-    });
-    ; (window as any).OCCT = oc;
-    initialized = true;
-    console.log('OCCT initialized');
-  } catch (e) {
-    console.error('无法加载 opencascade.js，请确保已安装或 CDN 可用', e);
-    throw e;
+  
+  // 如果正在初始化，等待现有的初始化完成
+  if (initializing && initPromise) {
+    return initPromise;
   }
+  
+  initializing = true;
+  initPromise = (async () => {
+    try {
+      oc = await new OpenCascade({
+        locateFile(path: string) {
+          if (path.endsWith('.wasm')) {
+            return occtWasmUrl;
+          }
+          return path;
+        }
+      });
+      ; (window as any).OCCT = oc;
+      initialized = true;
+      console.log('OCCT initialized');
+    } catch (e) {
+      console.error('无法加载 opencascade.js，请确保已安装或 CDN 可用', e);
+      throw e;
+    } finally {
+      initializing = false;
+    }
+  })();
+  
+  return initPromise;
 }
 
 function toFloat32(arr: number[]) { return new Float32Array(arr); }

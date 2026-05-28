@@ -7,14 +7,13 @@ export default defineConfig(({ command, mode }) => {
   // 配置基础路径，GitHub Pages 部署时需要设置为仓库名称
   // 本地开发时保持 '/'，部署时通过环境变量动态设置
   const isProduction = mode === 'production';
-  
+
   return {
     base: isProduction ? '/OCCT-Vue-Studio/' : '/',
     plugins: [vue()],
     server: {
       host: '0.0.0.0',
-      port: 5173,
-      allowedHosts: ['macaroni-snuff-clergyman.ngrok-free.dev']
+      port: 5173
     }
   };
 });
