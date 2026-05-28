@@ -10,7 +10,7 @@
 
 ## 🔗 在线访问
 
-- **GitHub Pages**: [https://your-username.github.io/OCCT-Vue-Studio/](https://your-username.github.io/OCCT-Vue-Studio/)
+- **GitHub Pages**: [https://livnal.github.io/OCCT-Vue-Studio/](https://livnal.github.io/OCCT-Vue-Studio/)
 
 ## 🚀 主要特性
 

@@ -3,14 +3,18 @@ import vue from '@vitejs/plugin-vue';
 
 // Vite configuration for the Vue 3 application.
 // This file defines the development server port and plugins used during build.
-export default defineConfig({
+export default defineConfig(({ command, mode }) => {
   // 配置基础路径，GitHub Pages 部署时需要设置为仓库名称
   // 本地开发时保持 '/'，部署时通过环境变量动态设置
-  base: process.env.NODE_ENV === 'production' ? '/OCCT-Vue-Studio/' : '/',
-  plugins: [vue()],
-  server: {
-    host: '0.0.0.0',
-    port: 5173,
-    allowedHosts: ['macaroni-snuff-clergyman.ngrok-free.dev']
-  }
+  const isProduction = mode === 'production';
+  
+  return {
+    base: isProduction ? '/OCCT-Vue-Studio/' : '/',
+    plugins: [vue()],
+    server: {
+      host: '0.0.0.0',
+      port: 5173,
+      allowedHosts: ['macaroni-snuff-clergyman.ngrok-free.dev']
+    }
+  };
 });
