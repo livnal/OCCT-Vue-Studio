@@ -12,7 +12,7 @@ import './styles.css';
  */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`)
       .then((registration) => {
         console.log('Service Worker 注册成功:', registration.scope);
       })
