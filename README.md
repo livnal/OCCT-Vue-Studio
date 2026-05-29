@@ -51,7 +51,7 @@
    ```bash
    # 方式一：使用自动化工作流（推荐）
    # 推送到 main/master 分支后自动触发部署
-   
+
    # 方式二：手动部署
    npm run deploy
    git add dist/.nojekyll
@@ -64,7 +64,7 @@
 本项目已配置自动化部署流程：
 
 ### 自动部署
-1. 确保你的代码已推送到 GitHub 仓库的 `main` 或 `master` 分支
+1. 确保你的代码已推送到 GitHub 仓库的 `main` 分支
 2. 在仓库设置中启用 GitHub Pages：
    - 进入 **Settings** → **Pages**
    - 在 **Source** 下选择 **GitHub Actions**
